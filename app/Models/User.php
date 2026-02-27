@@ -2,47 +2,63 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'users';
+
+    // 🔑 Todos los campos que quieres poder crear/actualizar masivamente inn
     protected $fillable = [
-        'name',
+        'nombre_usuario',
+        'nombres',
+        'apellidos',
+        'tipo_documento_id',
+        'numero_documento',
+        'celular',
+        'direccion',
+        'ciudad',
         'email',
-        'password',
+        'contrasena',
+        'tipo_rol_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+    // 👀 Ocultar la contraseña al devolver JSON
     protected $hidden = [
-        'password',
-        'remember_token',
+        'contrasena',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Relaciones
+    public function tipoDocumento()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(TipoDocumento::class, 'tipo_documento_id');
+    }
+
+    public function tipoRol()
+    {
+        return $this->belongsTo(TipoRol::class, 'tipo_rol_id');
+    }
+
+    // 🔑 Para que Auth use "contrasena" en lugar de "password"
+    public function getAuthPassword()
+    {
+        return $this->contrasena;
+    }
+
+    // Métodos requeridos por JWT
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()//7
+    {
+        return [];
     }
 }
