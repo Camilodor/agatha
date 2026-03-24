@@ -33,7 +33,7 @@ public function login(Request $request)
 
     return response()->json([
         'access_token' => $token,
-        'token_type' => 'bearer',//0
+        'token_type' => 'bearer',//y
         'user' => [
             'id' => $user->id,
             'nombre_usuario' => $user->nombre_usuario,

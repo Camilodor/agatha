@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -44,7 +45,13 @@ class UserController extends Controller
             'direccion'=> 'required|string',
             'ciudad'=> 'required|string',
             'email' => 'required|string|email|unique:users,email',
-            'contrasena' => 'required|string|min:6',
+            'contrasena' => [
+    'required',
+    'confirmed',
+    Password::min(8)
+        ->mixedCase()
+        ->symbols()
+],
             'tipo_rol_id' => 'required|integer|exists:tiposrol,id',
         ]);
 
