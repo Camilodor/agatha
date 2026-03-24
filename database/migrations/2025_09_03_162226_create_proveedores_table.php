@@ -12,9 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('proveedores', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+    $table->id();
+    $table->unsignedBigInteger('usuarios_id'); // 🔗 Relación con usuario
+    $table->string('nombre', 255);
+    $table->text('descripcion')->nullable();
+    $table->timestamps();
+
+    $table->foreign('usuarios_id')
+          ->references('id')
+          ->on('users')
+          ->onDelete('cascade');
+});
     }
 
     /**
