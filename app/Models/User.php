@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,7 +13,6 @@ class User extends Authenticatable implements JWTSubject
 
     protected $table = 'users';
 
-    // 🔑 Todos los campos que quieres poder crear/actualizar masivamente inn
     protected $fillable = [
         'nombre_usuario',
         'nombres',
@@ -27,14 +25,13 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'contrasena',
         'tipo_rol_id',
+        'foto_url',         
     ];
 
-    // 👀 Ocultar la contraseña al devolver JSON
     protected $hidden = [
         'contrasena',
     ];
 
-    // Relaciones
     public function tipoDocumento()
     {
         return $this->belongsTo(TipoDocumento::class, 'tipo_documento_id');
@@ -45,19 +42,17 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(TipoRol::class, 'tipo_rol_id');
     }
 
-    // 🔑 Para que Auth use "contrasena" en lugar de "password"
     public function getAuthPassword()
     {
         return $this->contrasena;
     }
 
-    // Métodos requeridos por JWT
     public function getJWTIdentifier()
     {
         return $this->getKey();
     }
 
-    public function getJWTCustomClaims()//7
+    public function getJWTCustomClaims()
     {
         return [];
     }
