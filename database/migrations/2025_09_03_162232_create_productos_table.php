@@ -11,9 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('proveedores', function (Blueprint $table) {
+        Schema::create('productos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('proveedores_id');
+            $table->string('nombre', 255);
+            $table->text('descripcion')->nullable();
             $table->timestamps();
+
+            $table->foreign('proveedores_id')
+                  ->references('id')
+                  ->on('proveedores')
+                  ->onDelete('cascade');
         });
     }
 
@@ -22,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('proveedores');
+        Schema::dropIfExists('productos');
     }
 };
